@@ -31,7 +31,6 @@ public class MainController {
     @PostMapping("/getinfo")
     @ResponseBody
     public String getinfo(
-//            @RequestBody ShopDTO shopDTO,
             @RequestParam String perPage
             ){
 //        log.warn("getinfo_perPage : " + perPage);

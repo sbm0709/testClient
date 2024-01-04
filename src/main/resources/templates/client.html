@@ -23,14 +23,14 @@
     <div>
         <table class="infoTable">
             <colgroup>
-                <col style="width: 10%;">
+                <col style="width: 50%">
                 <col>
-                <col style="width: 20%">
+                <col style="width: 10%">
             </colgroup>
             <thead>
                     <tr>
-                        <td>번호</td>
                         <td>이름</td>
+                        <td>시군구</td>
                         <td>view</td>
                     </tr>
             </thead>
@@ -48,6 +48,7 @@
 
 <script>
     const [perPage, districtName] = document.querySelectorAll("input");
+    const infoTable = document.querySelector(".infoTable");
 
     function get_info(){
         fetch("/getinfo?perPage="+perPage.value, {
@@ -67,35 +68,53 @@
             .catch(e => console.log("error : ",e))
     }
 
-    function updateDB(shopList, districtName){
+    async function updateDB(shopList, districtName) {
         const tbody = document.getElementById("info");
         tbody.innerHTML = "";
 
         for (const shop of shopList) {
-            if (shop.시군구명 === districtName)continue;
+            if (shop.시군구명 !== districtName) continue;
 
             const shopDTO = {
                 shopName: shop.가맹점명,
                 districtName: shop.시군구명,
                 viewCount: 1,
             }
-            upDateShopData(shopDTO)
-                .then();
+
+            const updatedShopDTO = await upDateShopData(shopDTO);
+
+            console.log("updatedShop : "+ updatedShopDTO);
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                        <td>${updatedShopDTO.shopName}</td>
+                        <td>${updatedShopDTO.districtName}</td>
+                        <td>${updatedShopDTO.viewCount}</td>`;
+            tbody.appendChild(newRow);
+
         }
+        infoTable.style.display = "block";
     }
 
     async function upDateShopData(shopDTO) {
-        const response = fetch("/update", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(shopDTO),
-        });
-        // console.log(await response.json());
-        return await response.json();
-        // .then((response) => {
-        //     console.log(response.json());
-        //     return response.json();
-        // })
+        try {
+            const response = await fetch("/update", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(shopDTO),
+            });
+
+            if (response.ok) {
+                const updatedShopDTO = await response.json();
+                console.log(updatedShopDTO);
+                return updatedShopDTO;
+            } else {
+                console.error("가게 데이터 업데이트에 실패했습니다. 상태:", response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error("오류 발생:", error);
+            return null;
+        }
     }
 
 
