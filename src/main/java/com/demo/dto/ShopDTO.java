@@ -9,7 +9,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 public class ShopDTO {
-
     private String shopName;
     private String districtName;
+    private int viewCount;
 }

@@ -1,24 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>home</title>
 </head>
+<style>
+    .infoTable{
+        display: none;
+    }
+</style>
 <body>
-<form action="#" method="post">
+<main>
     <div>
-        가게 몇개 :  <input type="number" name="perPage">
+        가게 몇개 :  <input type="number" th:name="perPage">
     </div>
     <div>
-        시군구 : <input type="text" name="districtname" placeholder="빈칸이면 전부">
+        시군구 : <input type="text" th:name="districtName" placeholder="빈칸이면 전부">
     </div>
-  <button>보내기</button>
-</form>
+    <button onclick="get_info()">보내기</button>
+</main>
+
+<th:block>
+    <div>
+        <table class="infoTable">
+            <colgroup>
+                <col style="width: 10%;">
+                <col>
+                <col style="width: 20%">
+            </colgroup>
+            <thead>
+                    <tr>
+                        <td>번호</td>
+                        <td>이름</td>
+                        <td>view</td>
+                    </tr>
+            </thead>
+            <tbody id="info">
+
+            </tbody>
+        </table>
+
+    </div>
+</th:block>
+
 
 </body>
 </html>
 
 <script>
+    const [perPage, districtName] = document.querySelectorAll("input");
+
+    function get_info(){
+        fetch("/getinfo?perPage="+perPage.value, {
+            method : "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then((response) => {
+                console.log(response)
+                return response.json();
+            }).then((result) => {
+
+            updateDB(result.data,districtName.value);
+
+        })
+            .catch(e => console.log("error : ",e))
+    }
+
+    function updateDB(shopList, districtName){
+        const tbody = document.getElementById("info");
+        tbody.innerHTML = "";
+
+        for (const shop of shopList) {
+            if (shop.시군구명 === districtName)continue;
+
+            const shopDTO = {
+                shopName: shop.가맹점명,
+                districtName: shop.시군구명,
+                viewCount: 1,
+            }
+            upDateShopData(shopDTO)
+                .then();
+        }
+    }
+
+    async function upDateShopData(shopDTO) {
+        const response = fetch("/update", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(shopDTO),
+        });
+        // console.log(await response.json());
+        return await response.json();
+        // .then((response) => {
+        //     console.log(response.json());
+        //     return response.json();
+        // })
+    }
+
 
 
 </script>

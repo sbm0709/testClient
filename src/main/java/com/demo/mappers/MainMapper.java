@@ -9,4 +9,7 @@ public interface MainMapper {
 
     void insert_shop(ShopDTO shopDTO);
 
+    void update_shop(ShopDTO shopDTO);
+
+    ShopDTO select_shop(ShopDTO shopDTO);
 }

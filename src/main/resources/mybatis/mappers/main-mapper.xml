@@ -1,8 +1,19 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.testboard.mappers.BoardMapper">
+<mapper namespace="com.demo.mappers.MainMapper">
 
+    <insert id="insert_shop" parameterType="ShopDTO">
+        INSERT INTO `shop` (shopName, districtName, viewCount) VALUES (#{shopName}, #{districtName}, #{viewCount});
+    </insert>
+
+    <select id="select_shop" parameterType="ShopDTO" resultType="ShopDTO">
+        SELECT * FROM `shop` WHERE shopName = #{shopName};
+    </select>
+
+    <update id="update_shop" parameterType="ShopDTO">
+        UPDATE `shop` SET `viewCount` = #{viewCount} WHERE shopName = #{shopName};
+    </update>
 
 </mapper>
 
