@@ -1,0 +1,11 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.testboard.mappers.BoardMapper">
+
+    <insert id="create_board" parameterType="BoardDTO">
+        INSERT INTO board (title, context, file) VALUES (#{title}, #{context}, #{file});
+    </insert>
+
+</mapper>
+
