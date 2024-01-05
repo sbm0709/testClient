@@ -28,14 +28,16 @@ public class MainController {
     @GetMapping("/client")
     public void home(){}
 
+
     @PostMapping("/getinfo")
     @ResponseBody
     public String getinfo(
-            @RequestParam String perPage
+            @RequestParam String perPage,
+            @RequestParam String page
             ){
 //        log.warn("getinfo_perPage : " + perPage);
 //        log.warn("getinfo_shopDTO : " + shopDTO);
-        return restTemplateService.getShoplist(perPage);
+        return restTemplateService.getShoplist(perPage, page);
     }
 
     @PostMapping("/update")

@@ -11,7 +11,10 @@
 <body>
 <main>
     <div>
-        가게 몇개 :  <input type="number" th:name="perPage">
+        Page : <input type="number" th:name="page" placeholder="빈칸이면 1페이지">
+    </div>
+    <div>
+         perPage :  <input type="number" th:name="perPage" placeholder="빈칸이면 10개">
     </div>
     <div>
         시군구 : <input type="text" th:name="districtName" placeholder="빈칸이면 전부">
@@ -29,9 +32,9 @@
             </colgroup>
             <thead>
                     <tr>
-                        <td>이름</td>
-                        <td>시군구</td>
-                        <td>view</td>
+                        <td>가맹점명</td>
+                        <td>시/군/구</td>
+                        <td>조회수</td>
                     </tr>
             </thead>
             <tbody id="info">
@@ -47,24 +50,21 @@
 </html>
 
 <script>
-    const [perPage, districtName] = document.querySelectorAll("input");
+    const [page, perPage, districtName] = document.querySelectorAll("input");
     const infoTable = document.querySelector(".infoTable");
 
     function get_info(){
-        fetch("/getinfo?perPage="+perPage.value, {
+        fetch("/getinfo?perPage="+perPage.value+"&page="+page.value, {
             method : "POST",
             headers: {
                 'Content-Type': 'application/json'
             },
-        })
-            .then((response) => {
+        }).then((response) => {
                 console.log(response)
                 return response.json();
             }).then((result) => {
-
             updateDB(result.data,districtName.value);
-
-        })
+                })
             .catch(e => console.log("error : ",e))
     }
 
@@ -73,7 +73,12 @@
         tbody.innerHTML = "";
 
         for (const shop of shopList) {
-            if (shop.시군구명 !== districtName) continue;
+
+            if (districtName.trim() !== "" ){
+                if(shop.시군구명 !== districtName) {
+                    continue;
+                }
+            }
 
             const shopDTO = {
                 shopName: shop.가맹점명,

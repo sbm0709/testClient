@@ -16,11 +16,11 @@ import java.util.List;
 public class RestTemplateService {
     private final String SERVICE_KEY = "KoDtJsVKUjPCWeuISpoKkT00zTW1/T3bQqcSDAI1ke1TqfceIic/UxLJF6wyx0IrGKkFWZGNevdFQ08jWlE7vg==";
 
-    public String getShoplist(String perPage){
+    public String getShoplist(String perPage, String page){
 
         URI uri = UriComponentsBuilder
                 .fromUriString("https://api.odcloud.kr/api/15109950/v1/uddi:1f78fe49-78b4-4784-a5f0-e2c8a60515b4")
-                .queryParam("page",1)
+                .queryParam("page",page)
                 .queryParam("perPage",perPage)
                 .queryParam("serviceKey",SERVICE_KEY)
                 .build()
