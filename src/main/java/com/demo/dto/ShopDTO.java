@@ -11,5 +11,5 @@ import lombok.*;
 public class ShopDTO {
     private String shopName;
     private String districtName;
-    private int viewCount;
+    private String viewCount;
 }

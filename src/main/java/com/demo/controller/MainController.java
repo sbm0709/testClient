@@ -3,6 +3,7 @@ package com.demo.controller;
 
 
 import com.demo.dto.ShopDTO;
+import com.demo.service.MainMailService;
 import com.demo.service.MainService;
 import com.demo.service.RestTemplateService;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Log4j2
@@ -24,6 +26,8 @@ public class MainController {
     @Autowired
     MainService mainService;
 
+    @Autowired
+    MainMailService mainMailService;
 
     @GetMapping("/client")
     public void home(){}
@@ -51,10 +55,23 @@ public class MainController {
             return shopDTO;
         }
         else {
-            select_shop.setViewCount(select_shop.getViewCount()+1);
-            mainService.update_shop(select_shop);
+//            select_shop.setViewCount(select_shop.getViewCount());
+//            mainService.update_shop(select_shop);
             return select_shop;
         }
+    }
+
+    @PostMapping("/send")
+    @ResponseBody
+    public boolean send(
+            @RequestParam String email,
+            @RequestBody List<ShopDTO> shList
+    ){
+//        log.error("send shlist :"+shList);
+//        log.error(email);
+
+        mainMailService.send(email,shList);
+        return true;
     }
 
 
